@@ -10,7 +10,7 @@ R
 
 # Description:
 *scripts*
-* "residuals simulation" - correct specification <br>
+* "residuals simulation - correct specification" <br>
   The program is used to perform simulations of the residues under correct specification of the BP model.
 
 * "fixed precision error" <br>
