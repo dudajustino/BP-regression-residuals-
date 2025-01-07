@@ -10,10 +10,10 @@ R
 
 Description:
 
-"Residual_H_Log_Like_BP"
+**Residual_H_Log_Like_BP
 This program contains the functions used to calculate the residuals, the hat matrix and the graphs used in the article.
 
-"residuals simulation - correct specification" 
+##residuals simulation - correct specification" 
 The program is used to perform simulations of the residues under correct specification of the BP model.
 
 "fixed precision error"
