@@ -3,7 +3,7 @@ library(fBasics)
 library(moments)
 library(pracma)
 
-# log lik function
+# log-like function
 log.like = function(y,mu,sigma)
 {
   a <- mu*(1+sigma)
