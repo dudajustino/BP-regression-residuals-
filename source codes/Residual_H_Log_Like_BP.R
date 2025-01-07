@@ -3,8 +3,7 @@ library(fBasics)
 library(moments)
 library(pracma)
 
-######### funcao log-verossimilhanca #################
-
+# log lik function
 log.like = function(y,mu,sigma)
 {
   a <- mu*(1+sigma)
@@ -15,12 +14,7 @@ log.like = function(y,mu,sigma)
   return(log.theta)
 }
 
-
-#####################################
-###  Matriz H - Alavancagem      ####
-#####################################
-###  Para função de ligação log   ###
-
+#Hat matrix   
 influence.BP <- function(model){
   n <- model$N
   y <- model$y
@@ -64,7 +58,7 @@ influence.BP <- function(model){
   Result
 }
 
-
+# Residuals
 residuals.BP <- function(object,
                          type = c("quantile", "pearson", "pearson P", "weighted", "sweighted1", "sweighted2", 
                                   "combined", "variance", "deviance", "deviance P", "response", "anscombe", "williams"), ...)
@@ -165,6 +159,7 @@ residuals.BP <- function(object,
   return(res)
 }
 
+#envelope plot
 envelope.BP <- function(model, k=100, link=c("log","log"), type=c("quantile", "pearson", "pearson P", "sweighted1", "sweighted2", 
                                                                   "variance", "combined", "deviance", "anscombe", "williams"),  
                         color="grey50", xlabel="N(0,1) quantiles", ylabel="Empirical quantiles", font="Times")
@@ -276,7 +271,7 @@ envelope.BP <- function(model, k=100, link=c("log","log"), type=c("quantile", "p
   assign("q2",q2[[1]], envir = globalenv())
 }
 
-
+#residuals plots
 plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov,
                     caption = c("Residuals vs. Index", "Residuals vs. Linear predictor", "Residuals vs. Adjusted values",
                                 "Adjusted values vs Observed values"), main = "", 
