@@ -23,7 +23,7 @@ The program is used to perform simulations of residuals under incorrect specific
 * "Residual_H_Log_Like_BP.R" <br>
   This program contains the functions used to calculate the residuals, the hat matrix and the graphs used in the article.
 
-*application*
+*applications*
 * "charry application.R" <br>
 The program is used to Application II: Black cherry trees data
 * "landrent application.R" <br>
