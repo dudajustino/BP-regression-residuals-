@@ -2,8 +2,6 @@
 # Clear all existing objects from the workspace
 rm(list=ls()) 
 
-setwd("C:/Users/euedu/Downloads/git")
-
 source("gamlss_BP.R")
 source("Residual_H_Log_Like_BP.R") 
 
