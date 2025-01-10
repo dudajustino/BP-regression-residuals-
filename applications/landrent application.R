@@ -1,5 +1,4 @@
 rm(list=ls()) 
-setwd("C:/Users/euedu/Downloads/git/source codes")
 
 source("gamlss_BP.R")
 source("Residual_H_Log_Like_BP.R") 
@@ -53,7 +52,6 @@ text(1, q1, sprintf("Q1 = %.2f", q1), pos = 4, col = "black",offset = 5.2,cex = 
 text(1, q3, sprintf("Q3 = %.2f", q3), pos = 4, col = "black",offset = 5.2,cex = 0.8)
 
 # candidate models
-
 fit0 <- gamlss(Y~I(log(X1)),family = BP(mu.link = "log"),trace=FALSE)
 summary(fit0)
 envelope.BP(fit0, k=100, type = "quantile", link=c("log","log"))
