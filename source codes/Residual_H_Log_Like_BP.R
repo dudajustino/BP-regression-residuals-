@@ -263,9 +263,9 @@ envelope.BP <- function(model, k=100, link=c("log","log"), type=c("quantile", "p
   par(new=T)
   qqnorm(med,axes=F,xlab="", ylab="", type="l",ylim=faixa,lty=2,main="")
   legend("topleft", legend=c(paste("Total of points:", n), paste("Points outside the envelope:", c95, "(", prop95, "%)")), bty="n", cex = 1)
-  #topleft bottomright
+  #our topright bottomleft bottomright
   
-  # name the points outside the envelopes (plot the index on the graph)
+  # to name the points outside the envelopes (plot the index on the graph) uncomment the next line
   #if(length(posi)!=0) text(r[posi], td[posi], posi, pos=1, cex = 0.75) 
   assign("q1",q1[[1]], envir = globalenv())
   assign("q2",q2[[1]], envir = globalenv())
