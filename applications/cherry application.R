@@ -40,8 +40,6 @@ text(1, minimo, sprintf("Min = %.2f", minimo), pos = 4, col = "black",offset = 5
 text(1, q1, sprintf("Q1 = %.2f", q1), pos = 4, col = "black",offset = 5.2,cex = 0.8)
 text(1, q3, sprintf("Q3 = %.2f", q3), pos = 4, col = "black",offset = 5.2,cex = 0.8)
 
-corr_plot(cherry) 
-
 # candidate models
 fit0 <- gamlss(Volume~Girth+Height,family = BP(mu.link = "log"),trace=FALSE)
 summary(fit0)
@@ -63,10 +61,10 @@ fit4 <- gamlss(Volume~I(log(Girth))+I(log(Height)),family = BP(mu.link = "log"),
 summary(fit4)
 envelope.BP(fit4, k=100, type = "quantile", link=c("log","log"))
 plot.BP(fit4, which = 1, type = "quantile", -3,3, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
-plot.BP(fit2, which = 2, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
-plot.BP(fit2, which = 3, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
-plot.BP(fit2, which = 4, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(1), cex.lab=1.5)
+plot.BP(fit4, which = 2, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
+plot.BP(fit4, which = 3, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
+plot.BP(fit4, which = 4, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(1), cex.lab=1.5)
 
 shapiro.test(residuals.BP(fit4,type = "quantile"))
-summary(fit2$mu.fv)
-summary(fit2$sigma.fv)
+summary(fit4$mu.fv)
+summary(fit4$sigma.fv)
