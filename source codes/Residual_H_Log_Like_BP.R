@@ -272,7 +272,7 @@ envelope.BP <- function(model, k=100, link=c("log","log"), type=c("quantile", "p
 }
 
 #residuals plots
-plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov,
+plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_application = TRUE, 
                     caption = c("Residuals vs. Index", "Residuals vs. Linear predictor", "Residuals vs. Adjusted values",
                                 "Adjusted values vs Observed values"), main = "", 
                     ask = prod(par("mfcol")) < length(which) && dev.interactive(), ylab,
@@ -308,38 +308,64 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov,
   }
   
   if(show[1]) {
-    plot(1:n, res, xlab="Index", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
-    #abline(h = q1, lty=2); abline(h = q2, lty=2)
-    #I <- q1; S <- q2
-    #idI <- which(res < I)
-    #idS <- which(res > S)
-    #if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
-    #if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+    if(type=="quantile"){
+      if (is_application) {
+        plot(1:n, res, xlab="Index", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(-3,3),...)
+        abline(h = -3, lty=2); abline(h = 3, lty=2)
+        abline(h = -2, lty=2); abline(h = 2, lty=2)
+        I <- q1; S <- q2
+        idI <- which(res < I)
+        idS <- which(res > S)
+        if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
+        if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+      } else{
+        plot(1:n, res, xlab="Index", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+        }
+    } else {
+      plot(1:n, res, xlab="Index", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+    }
     if(one.fig) 
-      abline(h = 0, lty = 2, col = "gray30")
-    
+    abline(h = 0, lty = 2, col = "gray30")
   }
   
   if(show[2]) {
-    plot(predict(model, type ="link"), res, xlab="Linear predictor", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
-    #abline(h = q1, lty=2); abline(h = q2, lty=2)
-    #I <- q1; S <- q2
-    #idI <- which(res < I)
-    #idS <- which(res > S)
-    #if(length(idS)!= 0) text(predict(model)[idS],res[idS],idS,pos=pos1,cex = 1.2)
-    #if(length(idI)!= 0) text(predict(model)[idI],res[idI],idI,pos=pos2,cex = 1.2)
+    if(type=="quantile"){
+      if (is_application) {
+      plot(predict(model, type ="link"), res, xlab="Linear predictor", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(-3,3),...)
+      abline(h = -3, lty=2); abline(h = 3, lty=2)
+      abline(h = -2, lty=2); abline(h = 2, lty=2)
+      I <- q1; S <- q2
+      idI <- which(res < I)
+      idS <- which(res > S)
+      if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
+      if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+      } else {
+        plot(predict(model, type ="link"), res, xlab="Linear predictor", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+        }
+    } else{
+      plot(predict(model, type ="link"), res, xlab="Linear predictor", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+    }
     if(one.fig)
-      abline(h = 1, lty = 2, col = "gray30")
+    abline(h = 0, lty = 2, col = "gray30")
   }
   
   if(show[3]) {
-    plot(fitted(model), res, xlab="Adjusted values", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
-    #abline(h = q1, lty=2); abline(h = q2, lty=2)
-    #I <- q1; S <- q2
-    #idI <- which(res < I)
-    #idS <- which(res > S)
-    #if(length(idS) != 0) text(fitted(model)[idS],res[idS],idS,pos=pos1,cex = 1.2)
-    #if(length(idI)!= 0) text(fitted(model)[idI],res[idI],idI,pos=pos2,cex = 1.2)
+    if(type=="quantile"){
+      if (is_application) {
+      plot(fitted(model), res, xlab="Adjusted values", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(-3,3),...)
+      abline(h = -3, lty=2); abline(h = 3, lty=2)
+      abline(h = -2, lty=2); abline(h = 2, lty=2)
+      I <- q1; S <- q2
+      idI <- which(res < I)
+      idS <- which(res > S)
+      if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
+      if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+      } else {
+        plot(fitted(model), res, xlab="Adjusted values", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+        }
+    } else{
+      plot(fitted(model), res, xlab="Adjusted values", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
+    }
     if(one.fig) 
       abline(h = 0, lty = 2, col = "gray30")
   }
@@ -353,12 +379,14 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov,
   
   if(show[5]) {
     plot(x1, res, xlab="x", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
-    #abline(h = q1, lty=2); abline(h = q2, lty=2)
-    #I <- q1; S <- q2
-    #idI <- which(res < I)
-    #idS <- which(res > S)
-    #if(length(idS) != 0) text(x1[idS],res[idS],idS,pos=pos1,cex = 1.2)
-    #if(length(idI) != 0) text(x1[idS],res[idI],idI,pos=pos2,cex = 1.2)
+    if(type=="quantile"){
+      abline(h = q1, lty=2); abline(h = q2, lty=2)
+      I <- q1; S <- q2
+      idI <- which(res < I)
+      idS <- which(res > S)
+      if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
+      if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+    }
     if(one.fig) 
       abline(h = 0, lty = 2, col = "gray30")
   }
@@ -366,3 +394,4 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov,
   if(!one.fig && par("oma")[3] >= 1) mtext(sub.caption, outer = TRUE, cex = 1.25)
   invisible()
 }
+
