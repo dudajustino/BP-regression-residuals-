@@ -68,10 +68,10 @@ fit3 <- gamlss(Y~I(log(X1))+I(log(X2)),~X2,family = BP(mu.link = "log", sigma.li
 summary(fit3)
 
 envelope.BP(fit3, k=100, type = "quantile", link=c("log","log"))
-plot.BP(fit3, which = 1, type = "quantile", -3,3, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
-plot.BP(fit3, which = 2, type = "quantile", -3,3, pos1 = c(2,3), pos2 = c(3), cex.lab=1.5)
-plot.BP(fit3, which = 3, type = "quantile", -3,3, pos2 = c(3), cex.lab=1.5)
-plot.BP(fit3, which = 4, type = "quantile", -2,2, pos1 = c(2,3), pos2 = c(1), cex.lab=1.5)
+plot.BP(fit3, which = 1, type = "quantile", is_application=T, q1=-2,q2=2, pos2 = c(3))
+plot.BP(fit3, which = 2, type = "quantile", is_application=T, q1=-2,q2=2, pos2 = c(3))
+plot.BP(fit3, which = 3, type = "quantile", is_application=T, q1=-2,q2=2, pos2 = c(3))
+plot.BP(fit3, which = 4, type = "quantile")
 
 shapiro.test(residuals.BP(fit3, type="quantile"))
 summary(fit3$mu.fv)
