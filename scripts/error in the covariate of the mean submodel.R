@@ -72,7 +72,7 @@ envelope.BP(fit1, k=100, type = "anscombe")
 envelope.BP(fit1, k=100, type = "williams")
 
 # index plots - correct model
-plot.BP(fit1, which = 5, type = "quantile") 
+plot.BP(fit1, which = 5, type = "quantile" is_application=F) 
 plot.BP(fit1, which = 5, type = "pearson")
 plot.BP(fit1, which = 5, type = "pearson P")
 plot.BP(fit1, which = 5, type = "sweighted1")
@@ -96,7 +96,7 @@ envelope.BP(fit2, k=100, type = "anscombe")
 envelope.BP(fit2, k=100, type = "williams")
 
 # index plots - incorrect model
-plot.BP(fit2, which = 5, type = "quantile") 
+plot.BP(fit2, which = 5, type = "quantile" is_application=F) 
 plot.BP(fit2, which = 5, type = "pearson")
 plot.BP(fit2, which = 5, type = "pearson P")
 plot.BP(fit2, which = 5, type = "sweighted1")
