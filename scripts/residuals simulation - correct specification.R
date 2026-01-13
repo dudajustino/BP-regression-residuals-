@@ -8,6 +8,7 @@ source("Residual_H_Log_Like_BP.R")
 # Packages
 library(gamlss)       # Generalized additive models for location, scale, and shap
 library(extraDistr)   # Additional Univariate and Multivariate Distributions
+library(xtable)
 
 NREP <- 10000     # Monte Carlo replicates
 n <- 20        # Sample size
@@ -251,3 +252,4 @@ qqplot.mc(williams[,,2], main = "", ylab = "Williams residual")
 qqplot.mc(williams[,,3], main = "", ylab = "Williams residual")
 qqplot.mc(williams[,,4], main = "", ylab = "Williams residual")
 qqplot.mc(williams[,,5], main = "", ylab = "Williams residual")
+
