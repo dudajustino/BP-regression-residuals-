@@ -10,7 +10,7 @@ library(gamlss)       # Generalized additive models for location, scale, and sha
 library(extraDistr)   # Additional Univariate and Multivariate Distributions
 
 NREP <- 10000     # Monte Carlo replicates
-n <- 30        # Sample size
+n <- 20        # Sample size
 
 set.seed(2022)  # Seed 
 # Generate model regressors
@@ -21,19 +21,12 @@ z1 <- runif(n)
 X <- cbind(x0,x1)  # Mean regressor matrix
 Z <- cbind(z0,z1)  # Precision regressor matrix
 
-# Matrices to store the p-values of the simulation
-pvalue <- array(NA,dim=c(NREP,10,5))
-contp5 <- array(0,dim=c(NREP,10,5))
-contp10 <- array(0,dim=c(NREP,10,5))
-
 # Matrices to store the residuals of the simulation
 quantile <- array(NA,dim=c(NREP,n,5))
 pearson <- array(NA,dim=c(NREP,n,5))
 pearsonp <- array(NA,dim=c(NREP,n,5))
 sweighted1 <- array(NA,dim=c(NREP,n,5))
 sweighted2 <- array(NA,dim=c(NREP,n,5))
-variance <- array(NA,dim=c(NREP,n,5))
-combined <- array(NA,dim=c(NREP,n,5))
 deviance <- array(NA,dim=c(NREP,n,5))
 anscombe <- array(NA,dim=c(NREP,n,5))
 williams <- array(NA,dim=c(NREP,n,5))
@@ -103,47 +96,9 @@ for(k in 1:5){
       pearsonp[i,,k] <- residuals.BP(fit, type = "pearson P")      # Standardized Pearson residual
       sweighted1[i,,k] <- residuals.BP(fit, type = "sweighted1")   # Weighted residual
       sweighted2[i,,k] <- residuals.BP(fit, type = "sweighted2")   # Standardized weighted residual
-      variance[i,,k] <- residuals.BP(fit, type = "variance")       # Variance residual
-      combined[i,,k] <- residuals.BP(fit, type = "combined")       # Combined residual
       deviance[i,,k] <- residuals.BP(fit, type = "deviance")       # Deviance residual
       anscombe[i,,k] <- residuals.BP(fit, type = "anscombe")       # Anscombe residual
       williams[i,,k] <- residuals.BP(fit, type = "williams")       # Williams residual
-      
-      # Shapiro-Wilk tests
-      pvalue[i,1,k] <- shapiro.test(quantile[i,,k])$p.value
-      pvalue[i,2,k] <- shapiro.test(pearson[i,,k])$p.value
-      pvalue[i,3,k] <- shapiro.test(pearsonp[i,,k])$p.value
-      pvalue[i,4,k] <- shapiro.test(sweighted1[i,,k])$p.value
-      pvalue[i,5,k] <- shapiro.test(sweighted2[i,,k])$p.value
-      pvalue[i,6,k] <- shapiro.test(variance[i,,k])$p.value
-      pvalue[i,7,k] <- shapiro.test(combined[i,,k])$p.value
-      pvalue[i,8,k] <- shapiro.test(deviance[i,,k])$p.value
-      pvalue[i,9,k] <- shapiro.test(anscombe[i,,k])$p.value
-      pvalue[i,10,k] <- shapiro.test(williams[i,,k])$p.value
-
-      # Count of p-values (significance levels of 5%)
-      if(pvalue[i,1,k]>0.05) contp5[i,1,k] <- 1
-      if(pvalue[i,2,k]>0.05) contp5[i,2,k] <- 1
-      if(pvalue[i,3,k]>0.05) contp5[i,3,k] <- 1
-      if(pvalue[i,4,k]>0.05) contp5[i,4,k] <- 1
-      if(pvalue[i,5,k]>0.05) contp5[i,5,k] <- 1
-      if(pvalue[i,6,k]>0.05) contp5[i,6,k] <- 1
-      if(pvalue[i,7,k]>0.05) contp5[i,7,k] <- 1
-      if(pvalue[i,8,k]>0.05) contp5[i,8,k] <- 1
-      if(pvalue[i,9,k]>0.05) contp5[i,9,k] <- 1
-      if(pvalue[i,10,k]>0.05) contp5[i,10,k] <- 1
-      
-      # Count of p-values (significance levels of 10%)
-      if(pvalue[i,1,k]>0.10) contp10[i,1,k] <- 1
-      if(pvalue[i,2,k]>0.10) contp10[i,2,k] <- 1
-      if(pvalue[i,3,k]>0.10) contp10[i,3,k] <- 1
-      if(pvalue[i,4,k]>0.10) contp10[i,4,k] <- 1
-      if(pvalue[i,5,k]>0.10) contp10[i,5,k] <- 1
-      if(pvalue[i,6,k]>0.10) contp10[i,6,k] <- 1
-      if(pvalue[i,7,k]>0.10) contp10[i,7,k] <- 1
-      if(pvalue[i,8,k]>0.10) contp10[i,8,k] <- 1
-      if(pvalue[i,9,k]>0.10) contp10[i,9,k] <- 1
-      if(pvalue[i,10,k]>0.10) contp10[i,10,k] <- 1
       
       i <- i + 1
       
@@ -165,26 +120,134 @@ for(k in 1:5){
 
 # Descriptive statistics
 desc <- function(residuos){
-  measures = apply(residuos, 2, function(x) c(mean(x), var(x), skewness(x), kurtosis(x)))
-  result = c(mean(measures[1,]), mean(measures[2,]), mean(measures[3,]), mean(measures[4,]))
+  result = apply(residuos, 2, 
+                  function(x) c(mean(x), var(x), skewness(x), kurtosis(x)))
   result
 }
 
-measures <- array(NA, dim=c(10,6,5))
-
-for (l in 1:5) {
-  measures[,,l] <- cbind(rbind(desc(quantile[,,l]), desc(pearson[,,l]), desc(pearsonp[,,l]), desc(sweighted1[,,l]), 
-                              desc(sweighted2[,,l]), desc(variance[,,l]), desc(combined[,,l]), desc(deviance[,,l]), 
-                              desc(anscombe[,,l]), desc(williams[,,l])),
-                        colSums(contp5[,,l])/NREP*100, colSums(contp10[,,l])/NREP*100)
+estat_obs <- function(array_res, k, estat = c("mean","var","skew","kurt")){
+  estat <- match.arg(estat)
+  desc_k <- desc(array_res[,,k])  
+  pos <- switch(estat,
+                mean = 1,
+                var  = 2,
+                skew = 3,
+                kurt = 4)
+  desc_k[pos, ]   
 }
 
-colnames(measures)<- c("Mean", "Variance", "Skewness", "Kurtosis", "SW 5%", "SW 10%")
-rownames(measures)<- c("Quantile", "Pearson", "Standardized Pearson", "Weighted", "Standardized Weighted", 
-                      "Variance", "Combined", "Deviance", "Anscombe", "Williams")
+table_stat <- function(k, estat){
+  tab <- cbind(
+    Quantile = estat_obs(quantile,  k, estat),
+    Pearson  = estat_obs(pearson,   k, estat),
+    PearsonP = estat_obs(pearsonp,  k, estat),
+    SW1      = estat_obs(sweighted1,k, estat),
+    SW2      = estat_obs(sweighted2,k, estat),
+    Deviance = estat_obs(deviance,  k, estat),
+    Anscombe = estat_obs(anscombe,  k, estat),
+    Williams = estat_obs(williams,  k, estat)
+  )
 
-cat("Descriptive statistics (on average) of residuals for scenario I \n"); round(measures[,,1],4)
-cat("Descriptive statistics (on average) of residuals for scenario II \n"); round(measures[,,2],4)
-cat("Descriptive statistics (on average) of residuals for scenario III \n"); round(measures[,,3],4)
-cat("Descriptive statistics (on average) of residuals for scenario IV \n"); round(measures[,,4],4)
-cat("Descriptive statistics (on average) of residuals for scenario V \n"); round(measures[,,5],4)
+    rownames(tab) <- 1:n
+  tab
+}
+
+k <- 1
+                 
+tab_mean <- table_stat(k, "mean")
+tab_var  <- table_stat(k, "var")
+tab_skew <- table_stat(k, "skew")
+tab_kurt <- table_stat(k, "kurt")
+
+xtable(tab_mean, digits = 3)
+xtable(tab_var, digits = 3)
+xtable(tab_skew, digits = 3)
+xtable(tab_kurt, digits = 3)
+
+#  Q-Q plot                 
+qqplot.mc <- function(res, main = "", ylab = "") {
+  n <- ncol(res)
+  NREP <- nrow(res)
+  
+  w <- ppoints(n)          
+  quantis_norm <- qnorm(w) 
+  
+  quantis_replicas <- matrix(NA, nrow = NREP, ncol = n)
+  
+  for(i in 1:NREP) {
+    res_i <- na.omit(res[i, ])
+    if(length(res_i) > 0) {
+      quantis_replicas[i, ] <- quantile(res_i, probs = w)
+    }
+  }
+  
+  quantis_media <- colMeans(quantis_replicas, na.rm = TRUE)
+  
+  plot(quantis_norm, quantis_media,
+       pch = 16, cex = 1, cex.lab = 1.3, cex.axis = 1, cex.main = 2,
+       xlab = "N(0,1) quantiles",
+       ylab = ylab,
+       main = main,
+       xlim = c(-2.3, 2.3), ylim = c(-2.3, 2.3))
+  
+  abline(0, 1, col = "black", lwd = 2)
+  
+}
+
+par(mfrow = c(1,1), mar = c(3.2, 3.2, 2, 3.2), oma = c(0.5, 0.5, 0.5, 0.5), mgp = c(2.2, 0.6, 0))
+
+# Resíduo quntilico
+qqplot.mc(quantile[,,1], main = "Scenario I", ylab = "Quantile residual")
+qqplot.mc(quantile[,,2], main = "Scenario II", ylab = "Quantile residual")
+qqplot.mc(quantile[,,3], main = "Scenario III", ylab = "Quantile residual")
+qqplot.mc(quantile[,,4], main = "Scenario IV", ylab = "Quantile residual")
+qqplot.mc(quantile[,,5], main = "Scenario V", ylab = "Quantile residual")
+
+# Resíduo Pearson
+qqplot.mc(pearson[,,1], main = "", ylab = "Pearson residual")
+qqplot.mc(pearson[,,2], main = "", ylab = "Pearson residual")
+qqplot.mc(pearson[,,3], main = "", ylab = "Pearson residual")
+qqplot.mc(pearson[,,4], main = "", ylab = "Pearson residual")
+qqplot.mc(pearson[,,5], main = "", ylab = "Pearson residual")
+
+# Resíduo Pearson Padronizado
+qqplot.mc(pearsonp[,,1], main = "", ylab = "Standardized Pearson residual")
+qqplot.mc(pearsonp[,,2], main = "", ylab = "Standardized Pearson residual")
+qqplot.mc(pearsonp[,,3], main = "", ylab = "Standardized Pearson residual")
+qqplot.mc(pearsonp[,,4], main = "", ylab = "Standardized Pearson residual")
+qqplot.mc(pearsonp[,,5], main = "", ylab = "Standardized Pearson residual")
+
+# Resíduo Ponderado
+qqplot.mc(sweighted1[,,1], main = "", ylab = "Weighted residual")
+qqplot.mc(sweighted1[,,2], main = "", ylab = "Weighted residual")
+qqplot.mc(sweighted1[,,3], main = "", ylab = "Weighted residual")
+qqplot.mc(sweighted1[,,4], main = "", ylab = "Weighted residual")
+qqplot.mc(sweighted1[,,5], main = "", ylab = "Weighted residual")
+
+# Resíduo Ponderado Padronizado
+qqplot.mc(sweighted2[,,1], main = "", ylab = "Standardized weighted residual")
+qqplot.mc(sweighted2[,,2], main = "", ylab = "Standardized weighted residual")
+qqplot.mc(sweighted2[,,3], main = "", ylab = "Standardized weighted residual")
+qqplot.mc(sweighted2[,,4], main = "", ylab = "Standardized weighted residual")
+qqplot.mc(sweighted2[,,5], main = "", ylab = "Standardized weighted residual")
+
+# Resíduo Deviance
+qqplot.mc(deviance[,,1], main = "", ylab = "Deviance residual")
+qqplot.mc(deviance[,,2], main = "", ylab = "Deviance residual")
+qqplot.mc(deviance[,,3], main = "", ylab = "Deviance residual")
+qqplot.mc(deviance[,,4], main = "", ylab = "Deviance residual")
+qqplot.mc(deviance[,,5], main = "", ylab = "Deviance residual")
+
+# Resíduo Anscombe
+qqplot.mc(anscombe[,,1], main = "", ylab = "Anscombe residual")
+qqplot.mc(anscombe[,,2], main = "", ylab = "Anscombe residual")
+qqplot.mc(anscombe[,,3], main = "", ylab = "Anscombe residual")
+qqplot.mc(anscombe[,,4], main = "", ylab = "Anscombe residual")
+qqplot.mc(anscombe[,,5], main = "", ylab = "Anscombe residual")
+
+# Resíduo Williams
+qqplot.mc(williams[,,1], main = "", ylab = "Williams residual")
+qqplot.mc(williams[,,2], main = "", ylab = "Williams residual")
+qqplot.mc(williams[,,3], main = "", ylab = "Williams residual")
+qqplot.mc(williams[,,4], main = "", ylab = "Williams residual")
+qqplot.mc(williams[,,5], main = "", ylab = "Williams residual")
