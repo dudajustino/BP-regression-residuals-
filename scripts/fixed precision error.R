@@ -5,6 +5,8 @@ rm(list=ls())
 source("gamlss_BP.R")
 source("Residual_H_Log_Like_BP.R") 
 
+RNGkind("Mersenne-Twister", "Inversion", "Rejection")
+
 # Packages
 library(gamlss)       # Generalized additive models for location, scale, and shap
 library(extraDistr)   # Additional Univariate and Multivariate Distributions
