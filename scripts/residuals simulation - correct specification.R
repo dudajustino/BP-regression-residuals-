@@ -121,20 +121,20 @@ for(k in 1:5){
 
 # Descriptive statistics
 desc <- function(residuos){
-  result = apply(residuos, 2, 
-                  function(x) c(mean(x), var(x), skewness(x), kurtosis(x)))
+  result = apply(residuos, 2,
+                 function(x) c(mean(x), sd(x), skewness(x), kurtosis(x)))
   result
 }
 
-estat_obs <- function(array_res, k, estat = c("mean","var","skew","kurt")){
+estat_obs <- function(array_res, k, estat = c("mean","sd","skew","kurt")){
   estat <- match.arg(estat)
-  desc_k <- desc(array_res[,,k])  
+  desc_k <- desc(array_res[,,k])
   pos <- switch(estat,
                 mean = 1,
-                var  = 2,
+                sd  = 2,
                 skew = 3,
                 kurt = 4)
-  desc_k[pos, ]   
+  desc_k[pos, ]
 }
 
 table_stat <- function(k, estat){
@@ -149,21 +149,36 @@ table_stat <- function(k, estat){
     Williams = estat_obs(williams,  k, estat)
   )
 
-    rownames(tab) <- 1:n
+  rownames(tab) <- 1:n
   tab
 }
 
 k <- 1
-                 
+
 tab_mean <- table_stat(k, "mean")
-tab_var  <- table_stat(k, "var")
+tab_var  <- table_stat(k, "sd")
 tab_skew <- table_stat(k, "skew")
 tab_kurt <- table_stat(k, "kurt")
 
-xtable(tab_mean, digits = 3)
-xtable(tab_var, digits = 3)
-xtable(tab_skew, digits = 3)
-xtable(tab_kurt, digits = 3)
+add_mean_sd_rows <- function(tab){
+
+  medias <- colMeans(tab, na.rm = TRUE)
+  sds    <- apply(tab, 2, sd, na.rm = TRUE)
+
+  tab2 <- rbind(tab, Mean = medias, SD = sds)
+
+  return(tab2)
+}
+
+tab_mean2 <- add_mean_sd_rows(tab_mean)
+tab_var2  <- add_mean_sd_rows(tab_var)
+tab_skew2 <- add_mean_sd_rows(tab_skew)
+tab_kurt2 <- add_mean_sd_rows(tab_kurt)
+
+xtable(tab_mean2, digits = 3)
+xtable(tab_var2,  digits = 3)
+xtable(tab_skew2, digits = 3)
+xtable(tab_kurt2, digits = 3)
 
 #  Q-Q plot                 
 qqplot.mc <- function(res, main = "", ylab = "") {
