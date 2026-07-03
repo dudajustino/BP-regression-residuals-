@@ -126,14 +126,26 @@ residuals.BP <- function(object,
                 },
                 
                 "deviance" = {
-                  ll <- function(mu, phi)
-                    (muonephi-1)*log(y) - muonephitwo*log(1+y) - lbeta((mu*(1+phi)),(2+phi))
+                ll <- function(mu, phi){
+                    a <- mu*(1+phi)
+                    b <- 2 + phi
+
+                    (a-1)*log(y) -
+                      (a+b)*log(1+y) -
+                      lbeta(a,b)
+                  }
                   sqrt(wts) * sign(res) * sqrt(2 * abs(ll(y, phi) - ll(mu, phi)))
                 },
                 
                 "deviance P" = {
-                  ll <- function(mu, phi)
-                    (muonephi-1)*log(y) - muonephitwo*log(1+y) - lbeta((mu*(1+phi)),(2+phi))
+                ll <- function(mu, phi){
+                    a <- mu*(1+phi)
+                    b <- 2 + phi
+
+                    (a-1)*log(y) -
+                      (a+b)*log(1+y) -
+                      lbeta(a,b)
+                  }
                   sqrt(wts) * (sign(res) * sqrt(2 * abs(ll(y, phi) - ll(mu, phi)))) / sqrt(1-hat)
                 },
                 
