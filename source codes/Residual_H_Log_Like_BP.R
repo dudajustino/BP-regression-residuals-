@@ -284,22 +284,22 @@ envelope.BP <- function(model, k=100, link=c("log","log"), type=c("quantile", "p
 }
 
 #residuals plots
-plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_application = TRUE, 
+plot.BP <- function(model, which = 1:5, q1 = -3, q2 = 3, pos1 = 3, pos2 = 3, xlabcov, is_application = TRUE,
                     caption = c("Residuals vs. Index", "Residuals vs. Linear predictor", "Residuals vs. Adjusted values",
-                                "Adjusted values vs Observed values"), main = "", 
+                                "Adjusted values vs Observed values"), main = "",
                     ask = prod(par("mfcol")) < length(which) && dev.interactive(), ylab,
-                    ..., type = c("quantile", "pearson", "pearson P", "sweighted1", "sweighted2", "variance", "combined", "deviance", "anscombe", "williams"), 
+                    ..., type = c("quantile", "pearson", "pearson P", "sweighted1", "sweighted2", "variance", "combined", "deviance", "anscombe", "williams"),
                     nsim = 100, level = 0.95)
 {
-  if(!is.numeric(which) || any(which < 1) || any(which > 5)) 
+  if(!is.numeric(which) || any(which < 1) || any(which > 5))
     stop("`which' must be in 1:5")
-  
+
   res <- residuals.BP(model, type = type)
   n <- length(res)
   show <- rep(FALSE, 5)
   show[which] <- TRUE
   one.fig <- prod(par("mfcol")) == 1
-  
+
   if(type=="quantile") ylab = "Quantile"
   if(type=="pearson") ylab = "Pearson"
   if(type=="pearson P") ylab = "Standardized Pearson"
@@ -310,15 +310,15 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_applicat
   if(type=="deviance") ylab = "Deviance"
   if(type=="anscombe") ylab = "Anscombe"
   if(type=="williams") ylab = "Williams"
-  
-  par(mar=c(4.8, 4.8, 1, 4.8)) 
+
+  par(mar=c(4.8, 4.8, 1, 4.8))
   par(mgp=c(3, 1, 0))
-  
+
   if(ask) {
     op <- par(ask = TRUE)
     on.exit(par(op))
   }
-  
+
   if(show[1]) {
     if(type=="quantile"){
       if (is_application) {
@@ -336,10 +336,10 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_applicat
     } else {
       plot(1:n, res, xlab="Index", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
     }
-    if(one.fig) 
+    if(one.fig)
     abline(h = 0, lty = 2, col = "gray30")
   }
-  
+
   if(show[2]) {
     if(type=="quantile"){
       if (is_application) {
@@ -360,7 +360,7 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_applicat
     if(one.fig)
     abline(h = 0, lty = 2, col = "gray30")
   }
-  
+
   if(show[3]) {
     if(type=="quantile"){
       if (is_application) {
@@ -378,31 +378,38 @@ plot.BP <- function(model, which = 1:5, q1, q2, pos1, pos2, xlabcov, is_applicat
     } else{
       plot(fitted(model), res, xlab="Adjusted values", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
     }
-    if(one.fig) 
+    if(one.fig)
       abline(h = 0, lty = 2, col = "gray30")
   }
-  
+
   if(show[4]) {
     y <- if(is.null(model$y)) model.response(model.frame(model)) else model$y
     plot(y, fitted(model), xlab = "Observed values", ylab = "Adjusted values", pch = "+", ...)
-    if(one.fig) 
+    if(one.fig)
       abline(0, 1, lty = 2, col = "gray30")
   }
-  
+
   if(show[5]) {
-    plot(x1, res, xlab="x", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim=c(min(res)-0.5,max(res)+0.5),...)
-    if(type=="quantile"){
-      abline(h = q1, lty=2); abline(h = q2, lty=2)
-      I <- q1; S <- q2
-      idI <- which(res < I)
-      idS <- which(res > S)
-      if(length(idS)!= 0) text(idS,res[idS],seq(1:n)[idS],pos=pos1,cex = 1.2)
-      if(length(idI)!= 0) text(idI,res[idI],seq(1:n)[idI],pos=pos2,cex = 1.2)
+    if(type == "quantile") {
+      if(is_application) {
+        plot(x1, res, xlab="x", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim = c(-3, 3),...)
+        abline(h = -3, lty=2); abline(h = 3, lty=2)
+        abline(h = -2, lty=2); abline(h = 2, lty=2)
+        I <- q1; S <- q2
+        idI <- which(res < I)
+        idS <- which(res > S)
+        if(length(idS)!= 0) text(x1[idS], res[idS], idS, pos = pos1, cex = 1.2)
+        if(length(idI)!= 0) text(x1[idI], res[idI], idI, pos = pos2, cex = 1.2)
+      } else {
+        plot(x1, res, xlab="x", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim = c(min(res)-0.5, max(res)+0.5),...)
+      } 
+    } else {
+      plot(x1, res, xlab="x", ylab=ylab, pch=1, cex=1, cex.lab=1.8, cex.axis=1.3, ylim = c(min(res)-0.5, max(res)+0.5),...)
     }
-    if(one.fig) 
-      abline(h = 0, lty = 2, col = "gray30")
-  }
-  
+      if(one.fig)
+        abline(h = 0, lty = 2, col = "gray30")
+    }
+    
   if(!one.fig && par("oma")[3] >= 1) mtext(sub.caption, outer = TRUE, cex = 1.25)
   invisible()
 }
