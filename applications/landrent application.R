@@ -7,7 +7,7 @@ source("Residual_H_Log_Like_BP.R")
 library(gamlss)       # Generalized additive models for location, scale, and shap
 library(extraDistr)   # Additional Univariate and Multivariate Distributions
 
-############### black cherry tree dataset ##########################
+############### Land rent data dataset ##########################
 
 #dataset available at Weisberg [28] on the average rent paid (in US dollars) per acre planted to alfalfa in 67 
 #counties in Minnesota in 1977
