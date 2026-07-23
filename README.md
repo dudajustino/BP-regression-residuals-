@@ -1,30 +1,53 @@
 # BP Regression Residuals
 
-This code can be used to reproduce the simulations used in the article.
+This repository contains the R codes used to reproduce the simulation study and real data applications presented in the manuscript
 
-# Authors:
-Maria Eduarda da Cruz Justino, Tarciana Liberal Pereira, Tatiene Correia de Souza
+> Justino, M. E. C., Pereira, T. L., & Souza, T. C. *Residual-Based Diagnostics for Assessing the Adequacy of Beta Prime Regression Models*. (Under review).
 
-# Programming language:
-R
+## Authors
 
-# Description:
-*scripts*
-* "residuals simulation - correct specification.R" <br>
-  The program is used to perform simulations of the residues under correct specification of the BP model.
+- Maria Eduarda da Cruz Justino
+- Tarciana Liberal Pereira
+- Tatiene Correia de Souza
 
-* "fixed precision error.R" <br>
-The program is used to perform simulations of residuals under incorrect specification of the BP model - Fixed Precision Error
+## Programming language
 
-* "error in the covariate of the mean submodel.R" <br>
-The program is used to perform simulations of residuals under incorrect specification of the BP model - Error in the covariate of the mean submodel
+- R
 
-*source codes*
-* "Residual_H_Log_Like_BP.R" <br>
-  This program contains the functions used to calculate the residuals, the hat matrix and the graphs used in the article.
+## Repository structure
 
-*applications*
-* "charry application.R" <br>
-The program is used to Application II: Black cherry trees data
-* "landrent application.R" <br>
-The program is used to Application I: Land rent data
+### `scripts/`
+
+Simulation studies presented in the manuscript.
+
+| File | Description |
+|------|-------------|
+| `residuals simulation - correct specification.R` | Simulation study under the correctly specified beta prime regression model. |
+| `fixed precision error.R` | Simulation study under misspecification of the beta prime regression model due to fixed precision. |
+| `error in the covariate of the mean submodel.R` | Simulation study under misspecification of the mean submodel due to omission of a relevant covariate. |
+
+### `source codes/`
+
+Supporting functions used by the simulation scripts and applications.
+
+| File | Description |
+|------|-------------|
+| `Residual_H_Log_Like_BP.R` | Functions for residuals, hat matrix, log-likelihood, diagnostic measures, and diagnostic plots. |
+| `gamlss_BP.R` | Beta prime family for the `gamlss` framework. |
+
+### `applications/`
+
+R scripts reproducing the real data applications presented in the manuscript.
+
+| File | Description |
+|------|-------------|
+| `landrent application.R` | Application to the land rent data from Weisberg (2014). |
+| `cherry application.R` | Application to the black cherry trees data from Ryan et al. (1976). |
+| `cherry.dat` | Black cherry trees dataset used in `cherry application.R`. |
+
+### Root directory
+
+| File | Description |
+|------|-------------|
+| `README.md` | Repository description and usage information. |
+| `reproducibility_info.txt` | R session information, package versions, and RNG settings used to ensure reproducibility. |
